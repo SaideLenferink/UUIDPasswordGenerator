@@ -77,13 +77,25 @@ public class Main {
         shortUUID.setFont(new Font("Arial", Font.PLAIN, 12));
         frame.add(shortUUID);
 
+        // Add a field for name input
+        JTextField nameField = new JTextField();
+        nameField.setBounds(350, 200, 100, 30);
+        nameField.setBorder(new LineBorder(Color.lightGray));
+        frame.add(nameField);
+
+        // Add a header text for name input
+        JLabel nameLabel = new JLabel("Name (optional)");
+        nameLabel.setBounds(350, 170, 100, 20);
+        frame.add(nameLabel);
+
         // Add the button to generate and copy the UUID to the clipboard
         JButton UUIDButton = new JButton("Generate UUID");
         UUIDButton.setBounds(50, 200, 290, 30);
         UUIDButton.setBackground(Color.decode("#ffffff"));
         UUIDButton.setBorder(new LineBorder(Color.lightGray));
         UUIDButton.addActionListener(e -> {
-            String generatedUUID = generateUUID(shortUUID.isSelected());
+            String name = nameField.getText();
+            String generatedUUID = generateUUID(shortUUID.isSelected(), name);
             uuidField.setText(generatedUUID);
             copyUUIDLabel.setText("UUID copied to clipboard.");
             copyToClipboard(generatedUUID);
@@ -127,13 +139,16 @@ public class Main {
     }
 
     // Method to generate a UUID and convert to String
-    private static String generateUUID(boolean shortVersion) {
+    private static String generateUUID(boolean shortVersion, String name) {
         UUID uuid = UUID.randomUUID();
         String uuidString = uuid.toString();
 
         if (shortVersion) {
             String[] parts = uuidString.split("-");
             uuidString = parts[1] + "-" + parts[2] + "-" + parts[3];
+        }
+        if (!name.isBlank()) {
+            uuidString = name + "-" + uuidString;
         }
         return uuidString;
     }
